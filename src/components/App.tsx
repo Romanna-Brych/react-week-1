@@ -2,7 +2,9 @@
 
 import Alert from "./Alert";
 import Button from "./Button";
+import ClickCounter from "./ClickCounter";
 import UserMenu from "./UserMenu";
+import { useState } from "react";
 
 // export default function App() {
 //   return (
@@ -34,7 +36,51 @@ const books: Book[] = [
   { id: "id-3", name: "React Query overview" },
 ];
 
+// interface User{
+//   id: number;
+//   name: string;
+// }
+
+interface Values {
+  x: number;
+  y: number;
+}
+
 export default function App() {
+  const [clicks, setClicks] = useState<number>(0);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("Im a button");
+    console.log(event);
+    setClicks(clicks + 1);
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleMessage = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const [values, setValues] = useState<Values>({ x: 0, y: 0 });
+  // const updateX = () => {
+  //   setValues({
+  //     ...values,
+  //     x: values.x + 1,
+  //   });
+  // };
+  // const updateY = () => {
+  //   setValues({
+  //     ...values,
+  //     y: values.y + 1,
+  //   });
+  // };
+  const updateValue = (key: keyof Values) => {
+    setValues({
+      ...values,
+      [key]: values[key] + 1,
+    });
+  };
+  console.log(values);
+  // const [item, setItem] = useState<User[]>([]);
+  // const [user, setUser] = useState<User | null>(null);
   return (
     <>
       <h1>Books of the week</h1>
@@ -49,6 +95,19 @@ export default function App() {
       <Button variant="primary" text="Login" />
       <Button variant="secondary" text="Follow" />
       <UserMenu name="My name" />
+      <button onClick={handleClick}>Current: {clicks}</button>
+      {/* <ClickCounter />
+      <ClickCounter /> */}
+      <ClickCounter onUpdate={handleClick} value={clicks} />
+      <ClickCounter onUpdate={handleClick} value={clicks} />
+      <button onClick={toggleMessage}>
+        {isOpen ? "Hide message" : "Show message"}
+      </button>
+      {isOpen && <p>🎉 Surprise! You toggled me.</p>}
+      {/* <button onClick={updateX}>Update X</button>
+      <button onClick={updateY}>Update Y</button> */}
+      <button onClick={() => updateValue("x")}>Update X</button>
+      <button onClick={() => updateValue("y")}>Update Y</button>
     </>
   );
 }
